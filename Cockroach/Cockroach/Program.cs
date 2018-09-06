@@ -11,22 +11,22 @@ namespace Cockroach
     {
         static void Main(string[] args)
         {
-            List<Insect> insectList = new List<Insect>();
-            insectList.Add(new Insect('*',1));
-            insectList.Add(new Insect('#',3));
-            insectList.Add(new Insect('&',5));
-            insectList.Add(new Insect('$',7));
+            List<FastInsect> insectList = new List<FastInsect>();
+            insectList.Add(new FastInsect('*',1));
+            insectList.Add(new FastInsect('#',3));
+            insectList.Add(new FastInsect('&',5));
+            insectList.Add(new FastInsect('$',7));
 
             CancellationTokenSource token = new CancellationTokenSource();
             
             int road = 0;
 
-            foreach (Insect i in insectList)
+            foreach (FastInsect i in insectList)
                 i.Run(token.Token);
 
             while (road <= 10)
             {
-                foreach (Insect i in insectList)
+                foreach (FastInsect i in insectList)
                 {
                     int s = i.Step();
                     if (road < s)
@@ -39,48 +39,5 @@ namespace Cockroach
         }
     }
 
-    public class Insect
-    {
-        int step;
-        char shape;
-        private int row;
-        object lokObject;
-
-        public Insect(char shape, int row)
-        {
-            this.shape = shape;
-            this.row = row;
-            this.lokObject = new object();
-        }
-        public void Run(CancellationToken token)
-        {
-            Task.Run(() =>
-            {
-                Random rnd = new Random();
-
-                while (!token.IsCancellationRequested)
-                {
-                    
-                    this.step++;
-                    Thread.Sleep(rnd.Next(1000, 2000));
-                    lock (lokObject)
-                    {
-                        Console.SetCursorPosition(step, row);
-                        Console.Write(shape);
-                    }
-                }
-            }, token);
-        
-
-        }
-
-        public int Step()
-        {
-            return this.step;
-        }
-        public char Shape()
-        {
-            return shape;
-        }
-    }
+  
 }
